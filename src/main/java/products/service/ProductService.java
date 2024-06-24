@@ -1,5 +1,7 @@
 package products.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import products.model.Product;
 import products.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +32,14 @@ public class ProductService {
     }
 
     // Método para borrar un producto por ID
-    public void deleteProductById(Long productId) {
-        productRepository.deleteById(productId);
+    public ResponseEntity<Object> deleteProductById(Long productId) {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        if (productOptional.isPresent()) {
+            productRepository.deleteById(productId);
+            return ResponseEntity.ok("Product deleted successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
     }
 
     // Método para modificar un producto
