@@ -1,6 +1,6 @@
 package products.controller;
 
-import products.service.productService;
+import products.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -9,60 +9,61 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import products.model.product;
-
+import products.model.Product;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping ("/products")
-//@RequiredArgsConstructor
+@RequestMapping("/products")
+public class ProductController {
 
-public class productController {
     @Autowired
-    private productService productService;
+    private ProductService productService;
 
-    //Metodos
+    // Métodos
 
-    //METODO PARA TRAER TODOS LOS PRODUCTOS
+    // Método para traer todos los productos
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<product> getProducts() {
+    public List<Product> getProducts() {
         return this.productService.getProducts();
     }
-    // METODO PARA TRAER UN PRODUCTO POR ID
+
+    // Método para traer un producto por ID
     @GetMapping("/{productId}")
-    public product getProductById(@PathVariable Long productId) {
+    public Product getProductById(@PathVariable Long productId) {
         return productService.getProductById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado"));
     }
-    //METODO PARA CREAR UN PRODUCT
+
+    // Método para crear un producto
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> addProduct(@Valid @RequestBody product product, BindingResult bindingResult) {
+    public ResponseEntity<Object> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList());
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         } else {
-            product createdProduct = productService.addProduct(product);
+            Product createdProduct = productService.addProduct(product);
             return ResponseEntity.ok(createdProduct);
         }
     }
 
-    //METODO PARA BORRAR UN PRODUCTO POR ID
+    // Método para borrar un producto por ID
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProductById(@PathVariable Long productId) {
         this.productService.deleteProductById(productId);
     }
-    //METODO PARA ACTUALIZAR UN PRODUCTO POR ID
+
+    // Método para actualizar un producto por ID
     @PutMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateProduct(@PathVariable Long productId, @RequestBody product product) {
+    public void updateProduct(@PathVariable Long productId, @RequestBody Product product) {
         this.productService.updateProduct(productId, product);
     }
-
-
 }

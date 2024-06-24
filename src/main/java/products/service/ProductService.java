@@ -1,7 +1,7 @@
 package products.service;
 
-import products.model.product;
-import products.repositories.productRepository;
+import products.model.Product;
+import products.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,23 +9,23 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class productService {
+public class ProductService {
 
     @Autowired
-    private productRepository productRepository;
+    private ProductRepository productRepository;
 
     // Método para obtener todos los productos
-    public List<product> getProducts() {
+    public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
     // Método para obtener un producto por su ID
-    public Optional<product> getProductById(Long productId) {
+    public Optional<Product> getProductById(Long productId) {
         return productRepository.findById(productId);
     }
 
     // Método para crear un producto
-    public product addProduct(product product) {
+    public Product addProduct(Product product) {
         return productRepository.save(product);
     }
 
@@ -33,11 +33,12 @@ public class productService {
     public void deleteProductById(Long productId) {
         productRepository.deleteById(productId);
     }
+
     // Método para modificar un producto
-    public product updateProduct(Long productId, product newProduct) {
-        Optional<product> existingProductOptional = productRepository.findById(productId);
+    public Product updateProduct(Long productId, Product newProduct) {
+        Optional<Product> existingProductOptional = productRepository.findById(productId);
         if (existingProductOptional.isPresent()) {
-            product existingProduct = existingProductOptional.get();
+            Product existingProduct = existingProductOptional.get();
             existingProduct.setSku(newProduct.getSku());
             existingProduct.setName(newProduct.getName());
             existingProduct.setDescripcion(newProduct.getDescripcion());
@@ -50,5 +51,4 @@ public class productService {
             throw new IllegalArgumentException("No se encontró el producto con el ID proporcionado");
         }
     }
-
 }

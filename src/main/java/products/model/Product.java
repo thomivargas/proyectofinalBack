@@ -14,21 +14,24 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
-public class product {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
-    @NotBlank(message = "El codigo no puede estar vacio")
+
+    @NotBlank(message = "El código no puede estar vacío")
     private String sku;
-    @NotBlank(message = "El nombre no puede estar vacio")
+
+    @NotBlank(message = "El nombre no puede estar vacío")
     @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
     private String name;
-    @NotBlank(message = "La descripcion no puede estar vacia")
+
+    @NotBlank(message = "La descripción no puede estar vacía")
     private String descripcion;
+
     @NotNull(message = "El precio es obligatorio")
     @DecimalMin(message = "El precio debe ser mayor a 0", value = "0.0")
     private Double price;
+
     private Boolean status;
 }
